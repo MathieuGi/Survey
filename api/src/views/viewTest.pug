@@ -1,0 +1,8 @@
+html 
+    head
+        title = "test"
+
+    body
+        form(method='POST' action='/form/Admin')
+            input#token.form-control(type='hidden',  name="_csrf", value=csrfToken)
+            button.btn.btn-primary(type='submit') Submit
