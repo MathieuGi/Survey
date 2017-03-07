@@ -1,8 +1,15 @@
 html 
     head
-        title = "test"
+        title test
 
     body
-        form(method='POST' action='/form/Admin')
+        form(method='POST' action='/survey/azerty1')
             input#token.form-control(type='hidden',  name="_csrf", value=csrfToken)
             button.btn.btn-primary(type='submit') Submit
+            each quest in questions
+                br
+                label(for='question-' + quest.id) #{quest.question}
+                
+                
+
+
