@@ -18,7 +18,7 @@ const GET_SURVEY_BY_TOKEN = `
 `;
 const GET_QUESTION_BY_SURVEY_ID = `SELECT * FROM questions WHERE survey_id = ?`;
 
-// POST requests
+// post requests
 const POST_ANSWER = `UPDATE questions SET ?? = ?? + 1 WHERE id = ?`;
 
 

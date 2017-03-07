@@ -8,7 +8,7 @@ var pool = mysqlCon.pool;
 const GET_USER_STATUS = "SELECT status FROM users WHERE token = ?";
 const GET_ALL_USERS = `SELECT * FROM users`;
 const GET_USER_BY_ID = `SELECT * FROM users WHERE id = ?`;
-const HAS_ANSWERED = `UPDATE FROM users SET status = 2 WHERE token = ?`;
+const SET_STATUS = `UPDATE users SET status = status + 1 WHERE token = ?`;
 
 
 
@@ -55,12 +55,12 @@ exports.getUserStatus = function (token, callback) {
     });
 }
 
-exports.hasAnswered = function (token, callback) {
+exports.setStatus = function (token, callback) {
     pool.getConnection(function (err, connection) {
         if (err === null) {
-            connection.query(HAS_ANSWERED, token, function (error, result, fields) {
+            connection.query(SET_STATUS, token, function (error, result, fields) {
                 if (error === null) {
-                    callback("This user has now answered !");
+                    callback(result);
                 } else {
                     console.log(error);
                 }
