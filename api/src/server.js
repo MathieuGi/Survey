@@ -3,6 +3,8 @@ var cookieParser = require('cookie-parser')
 var helmet = require('helmet');
 var parser = require('body-parser');
 var csrf = require('csurf');
+var cors = require('cors');
+
 var surveyModel = require('./models/survey');
 var userModel = require('./models/user');
 
@@ -10,6 +12,7 @@ var csrfProtection = csrf({ cookie: true });
 var parseForm = parser.urlencoded({ extended: false });
 var app = express();
 
+app.use(cors());
 app.use(cookieParser());
 app.use(helmet());
 app.set('view engine', 'pug');
@@ -109,20 +112,20 @@ var createQuestion = function (req, res, next) {
 
 
 // Check if the token is correct and survey available
-app.all('/user/:token/*', checkUserStatus, checkSurveyAvailability);
+app.all('/api/:token/*', checkUserStatus, checkSurveyAvailability);
 
 // Get the survey with a special token the avoid CSRF attacks
-app.get('/user/:token/survey', csrfProtection, getSurveyByToken);
+app.get('/api/:token/survey', csrfProtection, getSurveyByToken);
 
 // Get an array of questionsId for one survey
-app.get('/user/:token/questionsId/:survey_id', getQuestionBySurveyId);
+app.get('/api/:token/questionsId/:survey_id', getQuestionBySurveyId);
 
 // Get one question by Id
-app.get('/user/:token/question/:id', getQuestionByIdAndToken);
+app.get('/api/:token/question/:id', getQuestionByIdAndToken);
 
 // update answers with token
 var answers = [{ id: 1, answer: "yes" }, { id: 2, answer: "no" }];
-app.put('/user/:token/postAnswers', postAnswers);
+app.put('/api/:token/postAnswers', postAnswers);
 
 // Post a new survey
 var survey = ['2017-03-06', '2017-03-20', 'Fourth survey !'];
