@@ -39,7 +39,7 @@ var checkSurveyAvailability = function (req, res, next) {
         if (result) {
             next();
         } else {
-            res.status(401).send("No survey available for this token !")
+            res.status(404).send("No survey available for this token !")
         }
     });
 }
@@ -48,7 +48,7 @@ var getSurveyByToken = function (req, res, next) {
     var token = req.params.token;
     surveyModel.getSurveyByToken(token, function (survey) {
         if (survey === null) {
-            res.status(401).send("No survey available for this token !");
+            res.status(404).send("No survey available for this token !");
         } else {
             res.status(200).json({ csrfToken: req.csrfToken(), survey: survey });
         }
@@ -57,24 +57,32 @@ var getSurveyByToken = function (req, res, next) {
 
 var getQuestionBySurveyId = function (req, res, next) {
     var survey_id = req.params.survey_id;
+    var token = req.params.token;
     surveyModel.getQuestionsBySurveyId(survey_id, function (questions) {
-        if (questions === null) {
-            res.status(401).send("No questions found !");
-        } else {
-            res.status(200).json({ questions: questions });
-        }
+        userModel.getUserByToken(token, function (user) {
+            if (questions === null) {
+                res.status(404).send("No questions found !");
+            } else {
+                if (user.id_survey === questions.id_survey) {
+                    res.status(200).json({ questions: questions });
+                } else {
+                    res.status(401).send('Question not available for this user');
+                }
+            }
+        });
+
     });
 }
 
-var getQuestionById = function (req, res, next) {
+var getQuestionByIdAndToken = function (req, res, next) {
     var id = req.params.id;
     surveyModel.getQuestionById(id, function (question) {
         if (question === null) {
-            res.status(401).send("Question not found");
+            res.status(404).send("Question not found");
         } else {
             res.status(200).json({ question: question });
         }
-    })
+    });
 }
 
 var postAnswers = function (req, res, next) {
@@ -106,17 +114,21 @@ app.all('/user/:token/*', checkUserStatus, checkSurveyAvailability);
 // Get the survey with a special token the avoid CSRF attacks
 app.get('/user/:token/survey', csrfProtection, getSurveyByToken);
 
+// Get an array of questionsId for one survey
 app.get('/user/:token/questionsId/:survey_id', getQuestionBySurveyId);
 
-app.get('/user/:token/question/:id', getQuestionById);
+// Get one question by Id
+app.get('/user/:token/question/:id', getQuestionByIdAndToken);
 
 // update answers with token
 var answers = [{ id: 1, answer: "yes" }, { id: 2, answer: "no" }];
 app.put('/user/:token/postAnswers', postAnswers);
 
+// Post a new survey
 var survey = ['2017-03-06', '2017-03-20', 'Fourth survey !'];
 app.post('/admin/createSurvey', createSurvey);
 
+// Post a new question
 var question = ["Question 1", 3];
 app.post('/admin/createQuestion', createQuestion);
 
