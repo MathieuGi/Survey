@@ -39,14 +39,31 @@ app.get('/survey/:token', csrfProtection, function (req, res, next) {
     var token = req.params.token;
     surveyModel.getSurveyByToken(token, function (survey) {
         if (survey === null) {
-            res.send("No survey available for this token !");
+            res.status(401).send("No survey available for this token !");
         } else {
-            surveyModel.getQuestionsBySurveyId(survey.id, function (questions) {
-                console.log(questions);
-                res.status(200).json({ csrfToken: req.csrfToken(), survey: survey, questions: questions });
-            });
+            res.status(200).json({ csrfToken: req.csrfToken(), survey: survey });
         }
     });
+});
+
+app.get('/survey/:token/questionsId/:survey_id', function (req, res, next) {
+    surveyModel.getQuestionsBySurveyId(survey.id, function (questions) {
+        if (questions === null) {
+            res.status(401).send("No questions found !");
+        } else {
+            res.status(200).json({ questions: questions });
+        }
+    });
+});
+
+app.get('/survey/:token/question/:id', function (req, res, next) {
+    surveyModel.getQuestionById(id, function (question) {
+        if (question === null) {
+            res.status(401).send("Question not found");
+        } else {
+            res.status(200).json({ question: question });
+        }
+    })
 });
 
 // update answers with token
@@ -62,15 +79,15 @@ app.put('/survey/:token', function (req, res, next) {
 });
 
 var survey = ['2017-03-06', '2017-03-20', 'Fourth survey !'];
-app.post('/admin/createSurvey', function(req, res, next){
-    surveyModel.postSurvey(survey, function(message){
+app.post('/admin/createSurvey', function (req, res, next) {
+    surveyModel.postSurvey(survey, function (message) {
         res.send(message);
     });
 });
 
 var question = ["Question 1", 3];
-app.post('/admin/createQuestion', function(req, res, next){
-    surveyModel.postQuestion(question, function(message){
+app.post('/admin/createQuestion', function (req, res, next) {
+    surveyModel.postQuestion(question, function (message) {
         res.send(message);
     });
 });
