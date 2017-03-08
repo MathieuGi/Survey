@@ -14,13 +14,16 @@ const GET_SURVEY_BY_TOKEN = `
     FROM surveys S 
     INNER JOIN users U 
     ON S.id = U.survey_id
-    WHERE U.token = ? 
+    WHERE U.token = ? AND S.start < now() AND S.end > now()
 `;
 const GET_QUESTION_BY_SURVEY_ID = `SELECT * FROM questions WHERE survey_id = ?`;
 
-// post requests
+// update requests
 const POST_ANSWER = `UPDATE questions SET ?? = ?? + 1 WHERE id = ?`;
 
+// post requests
+const CREATE_QUESTION = `INSERT INTO questions (question, survey_id) VALUES (?, ?)`;
+const CREATE_SURVEY = `INSERT INTO surveys (start, end, name) VALUES (?, ?, ?)`;
 
 
 exports.getAllSurveys = function (callback) {
@@ -105,7 +108,7 @@ exports.getSurveyByToken = function (token, callback) {
         } else {
             connection.query(GET_SURVEY_BY_TOKEN, token, function (error, result, fields) {
                 if (error === null) {
-                    callback(result[0]);
+                    callback(result[0] || null);
                     connection.release();
                 } else {
                     console.log(error);
@@ -161,5 +164,39 @@ exports.postAnswers = function (answers, callback) {
             }
 
         });
+    });
+}
+
+exports.postSurvey = function (survey, callback) {
+    pool.getConnection(function (err, connection) {
+        if (err === null) {
+            connection.query(CREATE_SURVEY, survey, function (error, result, fields) {
+                if (error === null) {
+                    callback("New survey created");
+                } else {
+                    console.log(error);
+                }
+            });
+        } else {
+            console.log(err.code);
+            console.log(err.fatal);
+        }
+    });
+}
+
+exports.postQuestion = function (question, callback) {
+    pool.getConnection(function (err, connection) {
+        if (err === null) {
+            connection.query(CREATE_QUESTION, question, function (error, result, fields) {
+                if (error === null) {
+                    callback("New question created");
+                } else {
+                    console.log(error);
+                }
+            });
+        } else {
+            console.log(err.code);
+            console.log(err.fatal);
+        }
     });
 }

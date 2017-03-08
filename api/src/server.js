@@ -38,22 +38,40 @@ app.all('/survey/:token', function (req, res, next) {
 app.get('/survey/:token', csrfProtection, function (req, res, next) {
     var token = req.params.token;
     surveyModel.getSurveyByToken(token, function (survey) {
-        surveyModel.getQuestionsBySurveyId(survey.id, function (questions) {
-            console.log(questions);
-            res.status(200).json({ csrfToken: req.csrfToken(), survey: survey, questions: questions });
-        });
+        if (survey === null) {
+            res.send("No survey available for this token !");
+        } else {
+            surveyModel.getQuestionsBySurveyId(survey.id, function (questions) {
+                console.log(questions);
+                res.status(200).json({ csrfToken: req.csrfToken(), survey: survey, questions: questions });
+            });
+        }
     });
 });
 
-// Post form with token
+// update answers with token
 var answers = [{ id: 1, answer: "yes" }, { id: 2, answer: "no" }];
-app.post('/survey/:token', function (req, res, next) {
+app.put('/survey/:token', function (req, res, next) {
     var token = req.params.token;
     surveyModel.postAnswers(answers, function (message) {
 
         userModel.setStatus(token, function (mess) {
-            res.status(200).json({message: message, mess: mess});
+            res.status(200).json({ message: message, mess: mess });
         });
+    });
+});
+
+var survey = ['2017-03-06', '2017-03-20', 'Fourth survey !'];
+app.post('/admin/createSurvey', function(req, res, next){
+    surveyModel.postSurvey(survey, function(message){
+        res.send(message);
+    });
+});
+
+var question = ["Question 1", 3];
+app.post('/admin/createQuestion', function(req, res, next){
+    surveyModel.postQuestion(question, function(message){
+        res.send(message);
     });
 });
 

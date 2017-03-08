@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS `USERS` (
 
 CREATE TABLE IF NOT EXISTS `SURVEYS` (
     `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+    `update` TIMESTAMP,
     `start` TIMESTAMP,
     `end` TIMESTAMP,
     `name` VARCHAR(60),
@@ -44,8 +45,8 @@ insert into users value(1, "azerty1", "email1", 0, 1);
 insert into users value(2, "azerty2", "email2", 0, 1);
 insert into users value(3, "azerty3", "email3", 0, 2);
 insert into users value(4, "azerty4", "email4", 0, 1);
-insert into surveys value(1, null, null, "First survey");
-insert into surveys value(2, null, null, "Second survey");
+insert into surveys value(1, null, '2017-03-06', '2017-03-20', "First survey");
+insert into surveys value(2, null, '2017-03-06', '2017-03-07', "Second survey");
 insert into questions value(1, "Qui es-tu ?", 0, 0, 0, 1);
 insert into questions value(2, "Comment t'appelles tu ?", 0, 0, 0, 1);
 insert into questions value(3, "Es-tu un homme ou une femme ?", 0, 0, 0, 1);
