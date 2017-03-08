@@ -15,9 +15,16 @@ const GET_SURVEY_BY_TOKEN = `
     FROM surveys S 
     INNER JOIN users U 
     ON S.id = U.survey_id
+    WHERE U.token = ?
+`;
+const GET_QUESTIONS_BY_SURVEY_ID = `SELECT * FROM questions WHERE survey_id = ?`;
+const CHECK_SURVEY_AVAILABILITY = `
+    SELECT "true" 
+    FROM surveys S 
+    INNER JOIN users U 
+    ON S.id = U.survey_id
     WHERE U.token = ? AND S.start < now() AND S.end > now()
 `;
-const GET_QUESTION_BY_SURVEY_ID = `SELECT * FROM questions WHERE survey_id = ?`;
 
 // update requests
 const POST_ANSWER = `UPDATE questions SET ?? = ?? + 1 WHERE id = ?`;
@@ -33,10 +40,10 @@ exports.getAllSurveys = function (callback) {
             connection.query(GET_ALL_SURVEYS, function (error, results, fields) {
                 if (error === null) {
                     callback(results);
-                    connection.release();
                 } else {
                     console.log(error);
                 }
+                connection.release();
             });
         });
     });
@@ -48,10 +55,10 @@ exports.getAllQuestions = function (callback) {
             connection.query(GET_ALL_QUESTIONS, function (error, results, fields) {
                 if (error === null) {
                     callback(results);
-                    connection.release();
                 } else {
                     console.log(error)
                 }
+                connection.release();
 
             });
         });
@@ -65,10 +72,10 @@ exports.getSurveyById = function (id, callback) {
                 if (error === null) {
 
                     callback(result[0]);
-                    connection.release();
                 } else {
                     console.log(error);
                 }
+                connection.release();
             });
         });
     });
@@ -80,10 +87,10 @@ exports.getQuestionById = function (id, callback) {
             connection.query(GET_QUESTION_BY_ID, id, function (error, question, fields) {
                 if (error === null) {
                     callback(question[0] || "");
-                    connection.release();
                 } else {
                     console.log(error);
                 }
+                connection.release();
             });
         });
     });
@@ -95,10 +102,10 @@ exports.getSurveyByToken = function (token, callback) {
             connection.query(GET_SURVEY_BY_TOKEN, token, function (error, result, fields) {
                 if (error === null) {
                     callback(result[0] || null);
-                    connection.release();
                 } else {
                     console.log(error);
                 }
+                connection.release();
             });
         });
     });
@@ -107,17 +114,32 @@ exports.getSurveyByToken = function (token, callback) {
 exports.getQuestionsBySurveyId = function (id, callback) {
     pool.getConnection(function (err, connection) {
         errors.connectionError(err, function () {
-            connection.query(GET_QUESTION_BY_SURVEY_ID, id, function (error, results, fields) {
+            connection.query(GET_QUESTIONS_BY_SURVEY_ID, id, function (error, results, fields) {
                 if (error === null) {
                     callback(results);
-                    connection.release();
                 } else {
                     console.log(error);
                 }
+                connection.release();
 
             });
         });
 
+    });
+}
+
+exports.checkSurveyAvailability = function (token, callback) {
+    pool.getConnection(function (err, connection) {
+        errors.connectionError(err, function () {
+            connection.query(CHECK_SURVEY_AVAILABILITY, token, function (error, result, fields) {
+                if(error === null){
+                    console.log(result[0]);
+                    callback(result[0] || false);
+                } else {
+                    console.log(error);
+                }
+            });
+        });
     });
 }
 
@@ -155,6 +177,7 @@ exports.postSurvey = function (survey, callback) {
                 } else {
                     console.log(error);
                 }
+                connection.release();
             });
         })
     });
@@ -169,6 +192,7 @@ exports.postQuestion = function (question, callback) {
                 } else {
                     console.log(error);
                 }
+                connection.release();
             });
         });
     });
