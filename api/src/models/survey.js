@@ -1,6 +1,7 @@
 var exports = module.exports = {};
 var mysql = require('mysql');
 var mysqlCon = require('../database/connection');
+var errors = require('../exceptions/error');
 
 var pool = mysqlCon.pool;
 
@@ -28,10 +29,7 @@ const CREATE_SURVEY = `INSERT INTO surveys (start, end, name) VALUES (?, ?, ?)`;
 
 exports.getAllSurveys = function (callback) {
     pool.getConnection(function (err, connection) {
-        if (err != null) {
-            console.log(err.code);
-            console.log(err.fatal);
-        } else {
+        errors.connectionError(err, function () {
             connection.query(GET_ALL_SURVEYS, function (error, results, fields) {
                 if (error === null) {
                     callback(results);
@@ -40,16 +38,13 @@ exports.getAllSurveys = function (callback) {
                     console.log(error);
                 }
             });
-        }
+        });
     });
 }
 
 exports.getAllQuestions = function (callback) {
     pool.getConnection(function (err, connection) {
-        if (err != null) {
-            console.log(err.code);
-            console.log(err.fatal);
-        } else {
+        errors.connectionError(err, function () {
             connection.query(GET_ALL_QUESTIONS, function (error, results, fields) {
                 if (error === null) {
                     callback(results);
@@ -59,16 +54,13 @@ exports.getAllQuestions = function (callback) {
                 }
 
             });
-        }
+        });
     });
 }
 
 exports.getSurveyById = function (id, callback) {
     pool.getConnection(function (err, connection) {
-        if (err != null) {
-            console.log(err.code);
-            console.log(err.fatal);
-        } else {
+        errors.connectionError(err, function () {
             connection.query(GET_SURVEY_BY_ID, id, function (error, result, fields) {
                 if (error === null) {
 
@@ -78,16 +70,13 @@ exports.getSurveyById = function (id, callback) {
                     console.log(error);
                 }
             });
-        }
-    })
+        });
+    });
 }
 
 exports.getQuestionById = function (id, callback) {
     pool.getConnection(function (err, connection) {
-        if (err != null) {
-            console.log(err.code);
-            console.log(err.fatal);
-        } else {
+        errors.connectionError(err, function () {
             connection.query(GET_QUESTION_BY_ID, id, function (error, question, fields) {
                 if (error === null) {
                     callback(question[0] || "");
@@ -96,16 +85,13 @@ exports.getQuestionById = function (id, callback) {
                     console.log(error);
                 }
             });
-        }
+        });
     });
 }
 
 exports.getSurveyByToken = function (token, callback) {
     pool.getConnection(function (err, connection) {
-        if (err != null) {
-            console.log(err.code);
-            console.log(err.fatal);
-        } else {
+        errors.connectionError(err, function () {
             connection.query(GET_SURVEY_BY_TOKEN, token, function (error, result, fields) {
                 if (error === null) {
                     callback(result[0] || null);
@@ -114,16 +100,13 @@ exports.getSurveyByToken = function (token, callback) {
                     console.log(error);
                 }
             });
-        }
+        });
     });
 };
 
 exports.getQuestionsBySurveyId = function (id, callback) {
     pool.getConnection(function (err, connection) {
-        if (err != null) {
-            console.log(err.code);
-            console.log(err.fatal);
-        } else {
+        errors.connectionError(err, function () {
             connection.query(GET_QUESTION_BY_SURVEY_ID, id, function (error, results, fields) {
                 if (error === null) {
                     callback(results);
@@ -133,7 +116,7 @@ exports.getQuestionsBySurveyId = function (id, callback) {
                 }
 
             });
-        }
+        });
 
     });
 }
@@ -141,10 +124,7 @@ exports.getQuestionsBySurveyId = function (id, callback) {
 exports.postAnswers = function (answers, callback) {
     pool.getConnection(function (err, connection) {
         pool.getConnection(function (err, connection) {
-            if (err != null) {
-                console.log(err.code);
-                console.log(err.fatal);
-            } else {
+            errors.connectionError(err, function () {
                 var answersPosted = 0;
                 for (var i = 0; i < answers.length; i += 1) {
                     console.log(answers[i].answer + " " + answers[i].id);
@@ -161,15 +141,14 @@ exports.postAnswers = function (answers, callback) {
 
                     });
                 }
-            }
-
+            })
         });
     });
 }
 
 exports.postSurvey = function (survey, callback) {
     pool.getConnection(function (err, connection) {
-        if (err === null) {
+        errors.connectionError(err, function () {
             connection.query(CREATE_SURVEY, survey, function (error, result, fields) {
                 if (error === null) {
                     callback("New survey created");
@@ -177,16 +156,13 @@ exports.postSurvey = function (survey, callback) {
                     console.log(error);
                 }
             });
-        } else {
-            console.log(err.code);
-            console.log(err.fatal);
-        }
+        })
     });
 }
 
 exports.postQuestion = function (question, callback) {
     pool.getConnection(function (err, connection) {
-        if (err === null) {
+        errors.connectionError(err, function () {
             connection.query(CREATE_QUESTION, question, function (error, result, fields) {
                 if (error === null) {
                     callback("New question created");
@@ -194,9 +170,6 @@ exports.postQuestion = function (question, callback) {
                     console.log(error);
                 }
             });
-        } else {
-            console.log(err.code);
-            console.log(err.fatal);
-        }
+        });
     });
 }
