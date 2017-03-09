@@ -17,17 +17,17 @@ export class QuestionService {
     return Promise.reject(error.message || error);
   }
 
-  getQuestionsId(token: string, id_survey: number): Promise<number[]> {
-    const URL = "api/" + token + "/questionsId/" + id_survey;
+  getQuestionsId(token: string, surveyId: number): Promise<number[]> {
+    const URL = "http://localhost:3000/api/questionsId/" + surveyId;
 
     return this.http.get(URL)
       .toPromise()
-      .then(response => response.json().data as number[])
+      .then(response => response.json())
       .catch(this.handleError);
   }
 
-  getQuestionById(token: string, id: number): Promise<Question> {
-    const URL = "http://localhost:3000/api/" + token + "/question/" + id;
+  getQuestionById(token: string, questionId: number): Promise<Question> {
+    const URL = "http://localhost:3000/api/question/" + questionId;
 
     return this.http.get(URL)
       .toPromise()

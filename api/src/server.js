@@ -22,7 +22,6 @@ app.set('view engine', 'pug');
 var checkUserStatus = function (req, res, next) {
     var token = req.params.token;
     userModel.getUserStatus(token, function (userStatus) {
-        console.log(userStatus.status);
         if (userStatus.status === 0) {
             userModel.setStatus(token, 1, function () {
                 next();
@@ -42,7 +41,7 @@ var checkSurveyAvailability = function (req, res, next) {
         if (result) {
             next();
         } else {
-            res.status(404).send("No survey available for this token !")
+            res.status(404).send("No survey available for this token !");
         }
     });
 }
@@ -58,32 +57,40 @@ var getSurveyByToken = function (req, res, next) {
     });
 }
 
-var getQuestionBySurveyId = function (req, res, next) {
-    var survey_id = req.params.survey_id;
+var getSurveyIdByToken = function (req, res, next) {
     var token = req.params.token;
-    surveyModel.getQuestionsBySurveyId(survey_id, function (questions) {
-        userModel.getUserByToken(token, function (user) {
-            if (questions === null) {
-                res.status(404).send("No questions found !");
-            } else {
-                if (user.id_survey === questions.id_survey) {
-                    res.status(200).json({ questions: questions });
-                } else {
-                    res.status(401).send('Question not available for this user');
-                }
-            }
-        });
+    surveyModel.getSurveyIdByToken(token, function (surveyId) {
+        if (surveyId === null) {
+            res.status(404).send("No survey available for this token !");
+        } else {
+            res.status(200).json(surveyId)
+        }
+    })
+}
 
+var getQuestionsBySurveyId = function (req, res, next) {
+    var survey_id = parseInt(req.params.survey_id);
+
+    surveyModel.getQuestionsBySurveyId(survey_id, function (questions) {
+        if (questions !== null) {
+            var questionsId = [];
+            for (var i = 0; i < questions.length; i += 1) {
+                questionsId[i] = { "id": questions[i].id };
+            }
+            res.status(200).json(questionsId);
+        } else {
+            res.status(404).send("No question found !")
+        }
     });
 }
 
-var getQuestionByIdAndToken = function (req, res, next) {
+var getQuestionById = function (req, res, next) {
     var id = req.params.id;
     surveyModel.getQuestionById(id, function (question) {
         if (question === null) {
             res.status(404).send("Question not found");
         } else {
-            res.status(200).json({ question: question });
+            res.status(200).json(question);
         }
     });
 }
@@ -112,20 +119,23 @@ var createQuestion = function (req, res, next) {
 
 
 // Check if the token is correct and survey available
-app.all('/api/:token/*', checkUserStatus, checkSurveyAvailability);
+app.all('/api/survey/:token/*', checkUserStatus, checkSurveyAvailability);
 
 // Get the survey with a special token the avoid CSRF attacks
-app.get('/api/:token/survey', csrfProtection, getSurveyByToken);
+app.get('/api/survey/:token', csrfProtection, getSurveyByToken);
+
+// Get survey Id by token
+app.get('/api/survey/:token/surveyId', getSurveyIdByToken);
 
 // Get an array of questionsId for one survey
-app.get('/api/:token/questionsId/:survey_id', getQuestionBySurveyId);
+app.get('/api/questionsId/:survey_id', getQuestionsBySurveyId);
 
 // Get one question by Id
-app.get('/api/:token/question/:id', getQuestionByIdAndToken);
+app.get('/api/question/:id', getQuestionById);
 
 // update answers with token
 var answers = [{ id: 1, answer: "yes" }, { id: 2, answer: "no" }];
-app.put('/api/:token/postAnswers', postAnswers);
+app.put('/api/surveyId/:token/postAnswers', postAnswers);
 
 // Post a new survey
 var survey = ['2017-03-06', '2017-03-20', 'Fourth survey !'];

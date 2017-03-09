@@ -1,3 +1,23 @@
-<p>
-  survey works!
-</p>
+<div *ngIf="survey">
+  <div class="survey survey-{{survey.survey.id}}">
+    <header>
+      <app-header [survey]="survey"></app-header>
+    </header>
+
+    <section class="informations">
+      <app-preface></app-preface>
+    </section>
+
+    <section class="form">
+      <form>
+        <div *ngFor="let questionId of questionsId">
+          <app-question [questionId]="questionId.id"></app-question>
+        </div>
+
+        <input type="hidden" name="_csrf" value="{{survey.csrfToken}}">
+        <button type="button" (click)="submitSurvey()">Submit</button>
+      </form>
+    </section>
+
+  </div>
+</div>

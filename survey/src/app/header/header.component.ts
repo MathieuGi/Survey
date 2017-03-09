@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
@@ -14,17 +14,13 @@ import { SurveyService } from '../services/survey/survey.service';
 })
 export class HeaderComponent implements OnInit {
 
-  private survey: Survey;
+  @Input()
+  survey: Survey;
 
   constructor(private surveyService: SurveyService, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.route.params
-      .switchMap((params: Params) => this.surveyService.getForm(params['token']))
-      .subscribe(survey => {
-        console.log(survey);
-        this.survey = survey
-      });
+
   }
 
 }

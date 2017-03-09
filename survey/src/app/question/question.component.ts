@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 
-import {QuestionService} from '../services/question/question.service'
+import { Question } from '../shared/question';
+import { QuestionService } from '../services/question/question.service'
 
 @Component({
   selector: 'app-question',
@@ -13,14 +14,21 @@ import {QuestionService} from '../services/question/question.service'
 })
 export class QuestionComponent implements OnInit {
 
-  constructor(questionService: QuestionService, private route: ActivatedRoute) { }
+  @Input()
+  questionId: number;
+
+  private question: Question;
+
+  constructor(private questionService: QuestionService, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.route.params
-      .switchMap((params: Params) => this.questionService.get(params['token']))
-      .subscribe(survey => {
-        console.log(survey);
-        this.survey = survey
+      .switchMap((params: Params) =>
+        this.questionService
+          .getQuestionById(params['token'], this.questionId))
+      .subscribe(question => {
+        console.log(question);
+        this.question = question
       });
   }
 
