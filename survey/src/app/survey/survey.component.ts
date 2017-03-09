@@ -27,15 +27,19 @@ export class SurveyComponent implements OnInit {
     this.route.params
       .switchMap((params: Params) => this.surveyService.getSurvey(params['token']))
       .subscribe(survey => {
-        console.log(survey);
-        this.survey = survey;
-        this.getQuestionsId(survey.survey.id);
+        if (survey.survey.id) {
+          console.log("ok");
+          this.survey = survey;
+          this.getQuestionsId(survey.survey.id);
+        } else {
+          console.log("no")
+        }
       });
   }
 
   private getQuestionsId = function (id: number) {
     this.route.params
-      .switchMap((params: Params) => this.questionService.getQuestionsId(params['token'], id))
+      .switchMap((params: Params) => this.questionService.getQuestionsId(id))
       .subscribe(questionsId => {
         this.questionsId = questionsId;
         console.log(this.questionsId)

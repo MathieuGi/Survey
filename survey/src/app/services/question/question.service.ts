@@ -17,7 +17,7 @@ export class QuestionService {
     return Promise.reject(error.message || error);
   }
 
-  getQuestionsId(token: string, surveyId: number): Promise<number[]> {
+  getQuestionsId( surveyId: number): Promise<number[]> {
     const URL = "http://localhost:3000/api/questionsId/" + surveyId;
 
     return this.http.get(URL)
@@ -26,7 +26,7 @@ export class QuestionService {
       .catch(this.handleError);
   }
 
-  getQuestionById(token: string, questionId: number): Promise<Question> {
+  getQuestionById(questionId: number): Promise<Question> {
     const URL = "http://localhost:3000/api/question/" + questionId;
 
     return this.http.get(URL)

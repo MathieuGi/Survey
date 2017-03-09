@@ -21,13 +21,18 @@ export class SurveyService {
     return Promise.reject(error.message || error);
   }
 
-  getSurvey(token: string): Promise<Survey> {
+  getSurvey(token: string): Observable<Survey> {
     const URL = "http://localhost:3000/api/survey/" + token;
 
     return this.http.get(URL, this.options)
-      .toPromise()
-      .then(response => response.json() as Survey)
-      .catch(this.handleError);
+      .map((res: Response) => {
+        console.log("ookokokokok")
+        if(res.status === 200){
+          return res.json() as Survey;
+        } else {
+          return [];
+        }
+      });
   }
 
   getSurveyId(token: string): Observable<number> {

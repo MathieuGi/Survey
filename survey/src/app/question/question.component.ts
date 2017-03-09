@@ -25,7 +25,7 @@ export class QuestionComponent implements OnInit {
     this.route.params
       .switchMap((params: Params) =>
         this.questionService
-          .getQuestionById(params['token'], this.questionId))
+          .getQuestionById(this.questionId))
       .subscribe(question => {
         console.log(question);
         this.question = question
