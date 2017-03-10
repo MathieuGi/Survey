@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import 'rxjs/add/operator/switchMap';
 
 import { QuestionService } from '../services/question/question.service';
@@ -20,19 +20,19 @@ export class SurveyComponent implements OnInit {
   constructor(
     private questionService: QuestionService,
     private surveyService: SurveyService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit() {
     this.route.params
       .switchMap((params: Params) => this.surveyService.getSurvey(params['token']))
       .subscribe(survey => {
-        if (survey.survey.id) {
-          console.log("ok");
+        if (survey) {
           this.survey = survey;
           this.getQuestionsId(survey.survey.id);
         } else {
-          console.log("no")
+          this.router.navigate(["404"]);
         }
       });
   }

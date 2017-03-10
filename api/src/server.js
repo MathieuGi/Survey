@@ -60,7 +60,7 @@ var getSurveyByToken = function (req, res, next) {
 var getSurveyIdByToken = function (req, res, next) {
     var token = req.params.token;
     surveyModel.getSurveyIdByToken(token, function (surveyId) {
-        if (surveyId === null) {
+        if (!surveyId) {
             res.status(404).send("No survey available for this token !");
         } else {
             res.status(200).json(surveyId)

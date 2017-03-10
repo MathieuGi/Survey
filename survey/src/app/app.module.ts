@@ -36,6 +36,13 @@ import { RouterModule } from '@angular/router';
       {
         path: 'access-denied',
         component: WrongLinkComponent
+      }, {
+        path: '404',
+        component: WrongLinkComponent
+      },
+      {
+        path: '**',
+        redirectTo: '404'
       }
     ])
   ],

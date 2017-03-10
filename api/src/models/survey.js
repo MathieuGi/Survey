@@ -39,7 +39,7 @@ exports.getAllSurveys = function (callback) {
     pool.getConnection(function (err, connection) {
         errors.connectionError(err, function () {
             connection.query(GET_ALL_SURVEYS, function (error, results, fields) {
-                if (error === null) {
+                if (!error) {
                     callback(results || null);
                 } else {
                     console.log(error);
@@ -167,7 +167,7 @@ exports.postAnswers = function (answers, callback) {
                 for (var i = 0; i < answers.length; i += 1) {
                     console.log(answers[i].answer + " " + answers[i].id);
                     connection.query(POST_ANSWER, [answers[i].answer, answers[i].answer, answers[i].id], function (error, result, fields) {
-                        if (error === null) {
+                        if (!error) {
                             console.log('answers posted');
                             answersPosted += 1;
                             if (answersPosted === answers.length) {
