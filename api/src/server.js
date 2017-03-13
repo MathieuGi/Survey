@@ -117,6 +117,11 @@ var createQuestion = function (req, res, next) {
     });
 }
 
+var createUser = function(req, res, next){
+    console.log(req.body)
+    res.send("ok")
+}
+
 
 // Check if the token is correct and survey available
 app.all('/api/survey/:token/*', checkUserStatus, checkSurveyAvailability);
@@ -134,8 +139,7 @@ app.get('/api/questionsId/:survey_id', getQuestionsBySurveyId);
 app.get('/api/question/:id', getQuestionById);
 
 // update answers with token
-var answers = [{ id: 1, answer: "yes" }, { id: 2, answer: "no" }];
-app.put('/api/surveyId/:token/postAnswers', postAnswers);
+app.put('/api/survey/:token/postAnswers', postAnswers);
 
 // Post a new survey
 var survey = ['2017-03-06', '2017-03-20', 'Fourth survey !'];
@@ -144,6 +148,8 @@ app.post('/admin/createSurvey', createSurvey);
 // Post a new question
 var question = ["Question 1", 3];
 app.post('/admin/createQuestion', createQuestion);
+
+app.post('/admin/createUser', createUser);
 
 app.listen(3000, function () {
     console.log("Listening on port 3000 ...");
