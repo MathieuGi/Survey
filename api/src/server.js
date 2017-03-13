@@ -9,13 +9,15 @@ var surveyModel = require('./models/survey');
 var userModel = require('./models/user');
 
 var csrfProtection = csrf({ cookie: true });
-var parseForm = parser.urlencoded({ extended: false });
 var app = express();
 
 app.use(cors());
 app.use(cookieParser());
 app.use(helmet());
 app.set('view engine', 'pug');
+
+app.use(parser.json());
+app.use(parser.urlencoded({extended: true}))
 
 
 
@@ -95,9 +97,20 @@ var getQuestionById = function (req, res, next) {
     });
 }
 
+var getQuestionInfosById = function (req, res, next) {
+    var id = req.params.id;
+    surveyModel.getQuestionInfosById(id, function (question) {
+        if (question === null) {
+            res.status(404).send("Question not found");
+        } else {
+            res.status(200).json(question);
+        }
+    });
+}
+
 var postAnswers = function (req, res, next) {
     var token = req.params.token;
-    surveyModel.postAnswers(answers, function (message) {
+    surveyModel.postAnswers(token, req.body.answers, function (message) {
 
         userModel.setStatus(token, 2, function (mess) {
             res.status(200).json({ message: message, mess: mess });
@@ -122,7 +135,7 @@ var createQuestion = function (req, res, next) {
 app.all('/api/survey/:token/*', checkUserStatus, checkSurveyAvailability);
 
 // Get the survey with a special token the avoid CSRF attacks
-app.get('/api/survey/:token', csrfProtection, getSurveyByToken);
+app.get('/api/survey/:token/survey', csrfProtection, getSurveyByToken);
 
 // Get survey Id by token
 app.get('/api/survey/:token/surveyId', getSurveyIdByToken);
@@ -134,8 +147,9 @@ app.get('/api/questionsId/:survey_id', getQuestionsBySurveyId);
 app.get('/api/question/:id', getQuestionById);
 
 // update answers with token
-var answers = [{ id: 1, answer: "yes" }, { id: 2, answer: "no" }];
-app.put('/api/surveyId/:token/postAnswers', postAnswers);
+app.put('/api/survey/:token/put-answer', postAnswers); 
+
+app.get('/admin/results/:id', getQuestionInfosById);
 
 // Post a new survey
 var survey = ['2017-03-06', '2017-03-20', 'Fourth survey !'];
