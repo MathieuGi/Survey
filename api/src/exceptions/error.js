@@ -1,4 +1,6 @@
-var exports = module.exports = {};
+var exports = module.exports = {
+    
+};
 
 
 exports.connectionError = function (error, query) {

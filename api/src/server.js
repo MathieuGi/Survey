@@ -62,7 +62,7 @@ var getSurveyByToken = function (req, res, next) {
 var getSurveyIdByToken = function (req, res, next) {
     var token = req.params.token;
     surveyModel.getSurveyIdByToken(token, function (surveyId) {
-        if (surveyId === null) {
+        if (!surveyId) {
             res.status(404).send("No survey available for this token !");
         } else {
             res.status(200).json(surveyId)
@@ -130,6 +130,11 @@ var createQuestion = function (req, res, next) {
     });
 }
 
+var createUser = function(req, res, next){
+    console.log(req.body)
+    res.send("ok")
+}
+
 
 // Check if the token is correct and survey available
 app.all('/api/survey/:token/*', checkUserStatus, checkSurveyAvailability);
@@ -158,6 +163,8 @@ app.post('/admin/createSurvey', createSurvey);
 // Post a new question
 var question = ["Question 1", 3];
 app.post('/admin/createQuestion', createQuestion);
+
+app.post('/admin/createUser', createUser);
 
 app.listen(3000, function () {
     console.log("Listening on port 3000 ...");
