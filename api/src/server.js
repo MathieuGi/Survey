@@ -60,7 +60,7 @@ var getSurveyByToken = function (req, res, next) {
 var getSurveyIdByToken = function (req, res, next) {
     var token = req.params.token;
     surveyModel.getSurveyIdByToken(token, function (surveyId) {
-        if (surveyId === null) {
+        if (!surveyId) {
             res.status(404).send("No survey available for this token !");
         } else {
             res.status(200).json(surveyId)
@@ -135,7 +135,7 @@ app.get('/api/question/:id', getQuestionById);
 
 // update answers with token
 var answers = [{ id: 1, answer: "yes" }, { id: 2, answer: "no" }];
-app.put('/api/surveyId/:token/postAnswers', postAnswers);
+app.put('/api/survey/:token/postAnswers', postAnswers);
 
 // Post a new survey
 var survey = ['2017-03-06', '2017-03-20', 'Fourth survey !'];
