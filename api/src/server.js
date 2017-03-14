@@ -9,13 +9,14 @@ var surveyModel = require('./models/survey');
 var userModel = require('./models/user');
 
 var csrfProtection = csrf({ cookie: true });
-var parseForm = parser.urlencoded({ extended: false });
+var parseForm = parser.urlencoded({ extended: true });
 var app = express();
 
 app.use(cors());
 app.use(cookieParser());
 app.use(helmet());
 app.set('view engine', 'pug');
+app.use(parseForm);
 
 
 
@@ -118,7 +119,7 @@ var createQuestion = function (req, res, next) {
 }
 
 var createUser = function(req, res, next){
-    console.log(req.body)
+    console.log(req.body.token)
     res.send("ok")
 }
 
