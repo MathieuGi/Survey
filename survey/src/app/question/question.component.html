@@ -4,9 +4,9 @@
       {{question.question}}
     </h3>
     <div class="answers">
-      <input type="radio" name="question-{{question.id}}" value="yes"> Yes <br>
-      <input type="radio" name="question-{{question.id}}" value="no"> No <br>
-      <input type="radio" name="question-{{question.id}}" value="abstain" checked> Abstain <br>
+      <input type="radio" name="question-{{question.id}}" value="yes" (change)='onSelectionChange("yes")'> Yes <br>
+      <input type="radio" name="question-{{question.id}}" value="no" (change)='onSelectionChange("no")'> No <br>
+      <input type="radio" name="question-{{question.id}}" value="abstain" (change)='onSelectionChange("abstain")' checked> Abstain <br>
     </div>
   </div>
 </div>

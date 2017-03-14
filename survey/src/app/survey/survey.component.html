@@ -11,8 +11,9 @@
     <section class="form">
       <form>
         <div *ngFor="let questionId of questionsId">
-          <app-question [questionId]="questionId.id"></app-question>
+          <app-question [questionId]="questionId.id" (selectedAnswer)="onSelectedAnswer($event)"></app-question>
         </div>
+        
 
         <input type="hidden" name="_csrf" value="{{survey.csrfToken}}">
         <button type="button" (click)="submitSurvey()">Submit</button>

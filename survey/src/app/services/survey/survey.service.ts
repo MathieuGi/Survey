@@ -22,6 +22,12 @@ export class SurveyService {
   }
 
   getSurvey(token: string): Promise<Survey> {
+<<<<<<< HEAD
+    const URL = "http://localhost:3000/api/survey/" + token + "/survey";
+
+    return this.http.get(URL, this.options)
+      .map(res => res.json()).toPromise().then((data) => {return data}, (err) => { return false;});
+=======
     const URL = "http://localhost:3000/api/survey/" + token;
 
     return this.http.get(URL, this.options)
@@ -29,10 +35,11 @@ export class SurveyService {
       .toPromise().then(data => {return data}, err => {return false});
         
        
+>>>>>>> dfdceead0d9e012b116bdbb33acbe2a7b0f18f70
   }
 
   getSurveyId(token: string): Observable<number> {
-    const URL = "http://localhost:3000/api/survey/" + token;
+    const URL = "http://localhost:3000/api/survey/" + token + "surveyId";
 
     return this.http.get(URL, this.options)
       .map((res: Response) => {
