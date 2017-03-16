@@ -19,7 +19,7 @@ public class HttpRequests {
 
     public static void testGet() throws Exception {
 
-        URL oracle = new URL("http://localhost:3000/api/survey/azerty1/");
+        URL oracle = new URL("http://localhost:3000/api/survey/azerty1/survey");
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(oracle.openStream()));
 
