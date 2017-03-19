@@ -18,7 +18,6 @@ import org.json.simple.JSONObject;
 public class HttpRequests {
 
     public static void testGet() throws Exception {
-
         URL oracle = new URL("http://localhost:3000/api/survey/azerty2/survey");
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(oracle.openStream()));
@@ -35,13 +34,6 @@ public class HttpRequests {
         String charset = "UTF-8";
         String param1 = user.get(2);
         String param2 = user.get(3);
-        
-//        JSONObject json = new JSONObject();
-//
-//        json.put("token", user.get(3));
-//        json.put("email", user.get(2));
-//        json.put("status", 0);
-//        json.put("survey_id", 1);
 
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         connection.setDoOutput(true); // Triggers POST.
@@ -54,7 +46,7 @@ public class HttpRequests {
                 URLEncoder.encode(param2, charset));
 
         try (OutputStream output = connection.getOutputStream()) {
-            output.write(query.getBytes("UTF-8"));
+            output.write(query.getBytes());
         }
         InputStream response = connection.getInputStream();
         
