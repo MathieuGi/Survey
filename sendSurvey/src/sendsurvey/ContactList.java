@@ -47,7 +47,6 @@ public class ContactList {
                 list.add(cell.getStringCellValue());
             }
             if (list.size() != 1) {
-                System.out.println(list.size());
                 contactsList.add(list);
             }
         }

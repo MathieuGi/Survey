@@ -34,7 +34,7 @@ public class SendSurvey {
         for(int i = 1; i < contacts.contactsList.size(); i++){
             //SendEmail.sendEmail(contacts.contactsList.get(i));
             CrunchifyJavaMailExample.generateAndSendEmail(contacts.contactsList.get(i));
-            //HttpRequests.addUser(contacts.contactsList.get(i));
+            HttpRequests.addUser(contacts.contactsList.get(i));
         }
         
     }

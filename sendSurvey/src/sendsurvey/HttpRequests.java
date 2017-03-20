@@ -41,10 +41,11 @@ public class HttpRequests {
         connection.setRequestProperty("Accept-Charset", charset);
         connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 
-        String query = String.format("email=%s&token=%s",
+        // surveyId fixé, à revoir pour qu'il soit sélectionné 
+        String query = String.format("email=%s&token=%s&surveyId=1",
                 URLEncoder.encode(param1, charset),
                 URLEncoder.encode(param2, charset));
-
+        
         try (OutputStream output = connection.getOutputStream()) {
             output.write(query.getBytes());
         }

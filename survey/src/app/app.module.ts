@@ -42,21 +42,11 @@ import { RouterModule } from '@angular/router';
       {
         path: '404',
         component: WrongLinkComponent
-<<<<<<< HEAD
       },
       {
         path: "**",
         redirectTo: '/404',
         pathMatch: "full"
-=======
-      }, {
-        path: '404',
-        component: WrongLinkComponent
-      },
-      {
-        path: '**',
-        redirectTo: '404'
->>>>>>> dfdceead0d9e012b116bdbb33acbe2a7b0f18f70
       }
     ])
   ],
