@@ -36,11 +36,7 @@ export class SurveyComponent implements OnInit {
           this.survey = survey;
           this.getQuestionsId(survey.survey.id);
         } else {
-<<<<<<< HEAD
           this.router.navigate(["/404"]);
-=======
-          this.router.navigate(["404"]);
->>>>>>> dfdceead0d9e012b116bdbb33acbe2a7b0f18f70
         }
       });
   }
