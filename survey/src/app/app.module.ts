@@ -9,6 +9,7 @@ import { PrefaceComponent } from './preface/preface.component';
 import { QuestionComponent } from './question/question.component';
 import { SurveyComponent } from './survey/survey.component';
 import { WrongLinkComponent } from './wrong-link/wrong-link.component';
+import { SurveyPostedComponent } from './survey-posted/survey-posted.component';
 
 import { SurveyService } from './services/survey/survey.service';
 import { QuestionService } from './services/question/question.service';
@@ -22,7 +23,8 @@ import { RouterModule } from '@angular/router';
     PrefaceComponent,
     QuestionComponent,
     SurveyComponent,
-    WrongLinkComponent
+    WrongLinkComponent,
+    SurveyPostedComponent
   ],
   imports: [
     BrowserModule,
@@ -34,8 +36,17 @@ import { RouterModule } from '@angular/router';
         component: SurveyComponent
       },
       {
-        path: 'access-denied',
+        path: 'survey-posted',
+        component: SurveyPostedComponent
+      },
+      {
+        path: '404',
         component: WrongLinkComponent
+      },
+      {
+        path: "**",
+        redirectTo: '/404',
+        pathMatch: "full"
       }
     ])
   ],

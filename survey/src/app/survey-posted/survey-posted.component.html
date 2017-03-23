@@ -1,0 +1,17 @@
+<h1>Results</h1>
+
+<table>
+  <tr>
+    <th>Question</th>
+    <th>Yes</th>
+    <th>No</th>
+    <th>Abstain</th>
+  </tr>
+
+  <tr *ngFor="let question of questions">
+    <td>{{question.question}}</td>
+    <td>{{question.yes}}</td>
+    <td>{{question.no}}</td>
+    <td>{{question.abstain}}</td>
+  </tr>
+</table>
