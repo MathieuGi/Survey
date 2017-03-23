@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 
-import {CreateSurveyComponent} from './create-survey/create-survey.component';
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
