@@ -117,15 +117,10 @@ var postAnswers = function(req, res, next) {
 }
 
 var createSurvey = function(req, res, next) {
-    surveyModel.postSurvey(survey, function(message) {
-        res.send(message);
-    });
+    console.log(req.body);
 }
 
 var createQuestion = function(req, res, next) {
-    surveyModel.postQuestion(question, function(message) {
-        res.send(message);
-    });
 }
 
 var createUser = function(req, res, next) {

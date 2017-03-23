@@ -224,7 +224,7 @@ exports.postSurvey = function (survey, callback) {
         errors.connectionError(err, function () {
             connection.query(CREATE_SURVEY, survey, function (error, result, fields) {
                 if (error === null) {
-                    callback("New survey created");
+                    callback(result.insertId);
                 } else {
                     console.log(error);
                 }
