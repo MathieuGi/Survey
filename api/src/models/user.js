@@ -1,5 +1,4 @@
 var exports = module.exports = {};
-
 var mysqlCon = require('../database/connection');
 var errors = require('../exceptions/error');
 

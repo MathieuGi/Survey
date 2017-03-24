@@ -50,7 +50,7 @@ export class QuestionService {
   putAnswers(token: string, answers: Answer[]) {
     const URL = "http://localhost:3000/api/survey/" + token + "/put-answer";
 
-    return this.http.put(URL, {'answers': answers}, this.options)
+    return this.http.put(URL, {answers} , this.options)
     .toPromise()
     .then(() => true)
     .catch(this.handleError);
