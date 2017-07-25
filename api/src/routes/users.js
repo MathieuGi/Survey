@@ -11,6 +11,7 @@ var csrfProtection = csrf({ cookie: true });
 
 
 var checkUserStatus = function (req, res, next) {
+    
     var token = req.params.token;
     userModel.getUserStatus(token, function (userStatus) {
         if (userStatus.status === 0) {

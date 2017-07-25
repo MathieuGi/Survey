@@ -18,20 +18,23 @@ var getQuestionInfosById = function (req, res, next) {
 }
 
 createSurvey = function (req, res, next) {
-    surveyModel.postSurvey(survey, function (message) {
-        res.send(message);
-    });
+    if (req.body.survey) {
+        surveyModel.postSurvey(survey, function (message) {
+            res.send(message);
+        });
+    }
 }
 
 createQuestion = function (req, res, next) {
-    
-    questionModel.postQuestion(question, function (message) {
-        res.send(message);
-    });
+    if (req.body.question) {
+        questionModel.postQuestion(question, function (message) {
+            res.send(message);
+        });
+    }
 }
 
 createUser = function (req, res, next) {
-    if (req.body.email || req.body.token) {
+    if (req.body.email && req.body.token) {
         userModel.createUser(req.body.token, req.body.email, req.body.surveyId, function (mess) {
             res.status(200).send(mess);
         });
@@ -42,10 +45,10 @@ exports.getRoutes = function (app) {
     app.get('/admin/results/:id', getQuestionInfosById);
 
     // Post a new survey
-    app.post('/admin/createSurvey', createSurvey);
+    app.post('/admin/create-survey', createSurvey);
 
     // Post a new question
-    app.post('/admin/createQuestion', createQuestion);
+    app.post('/admin/create-question', createQuestion);
 
-    app.post('/admin/createUser', createUser);
+    app.post('/admin/create-user', createUser);
 }

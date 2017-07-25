@@ -30,8 +30,8 @@ public class HttpRequests {
     }
 
     public static void addUser(List<String> user) throws ProtocolException, MalformedURLException, IOException {
-        String url = "http://localhost:3000/admin/createUser";
-        String charset = "UTF-8";
+        String url = "http://localhost:3000/admin/create-user";
+        String charset = "UTF-8"; 
         String param1 = user.get(2);
         String param2 = user.get(3);
 
@@ -39,17 +39,25 @@ public class HttpRequests {
         connection.setDoOutput(true); // Triggers POST.
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Accept-Charset", charset);
-        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+        connection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+        
+        connection.connect();
 
         // surveyId fixé, à revoir pour qu'il soit sélectionné 
-        String query = String.format("email=%s&token=%s&surveyId=1",
-                URLEncoder.encode(param1, charset),
-                URLEncoder.encode(param2, charset));
+        JSONObject obj = new JSONObject();
+        obj.put("email", param1);
+        obj.put("token", param2);
+        obj.put("surveyId", 1);
         
         try (OutputStream output = connection.getOutputStream()) {
-            output.write(query.getBytes());
+            OutputStreamWriter osw = new OutputStreamWriter(output, charset);
+            osw.write(obj.toString());
+            osw.flush();
+            osw.close();
         }
-        InputStream response = connection.getInputStream();
+        
+        
+        connection.getInputStream();
         
     }
 

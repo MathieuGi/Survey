@@ -41,7 +41,7 @@ public class CrunchifyJavaMailExample {
 		generateMailMessage = new MimeMessage(getMailSession);
 		generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(contactInfos.get(2)));
 		generateMailMessage.setSubject("test Email sender");
-		String emailBody = "Hello " + contactInfos.get(0) + " " + contactInfos.get(1) + "<br><br> Here the link to answer the survey : http://localhost:2000/survey/" + contactInfos.get(3);
+		String emailBody = "Hello " + contactInfos.get(0) + " " + contactInfos.get(1) + "<br><br> Here the link to answer the survey : <a href='http://localhost:4200/survey/" + contactInfos.get(3) + "'>Click here ! </a>";
 		generateMailMessage.setContent(emailBody, "text/html");
 		System.out.println("Mail Session has been created successfully..");
  
